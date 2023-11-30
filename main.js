@@ -3,14 +3,17 @@ let gameBoard = ["", "", "", "", "", "", "", "", ""];
 let gameActive = true;
 let startTime;
 let endTime;
+let gameTimeLimit = 300000; // 5 minutes in milliseconds
 
 function handleClick(index) {
   if (gameBoard[index] === "" && gameActive) {
     gameBoard[index] = currentPlayer;
     document.getElementsByClassName("cell")[index].innerText = currentPlayer;
-
-    if (!startTime) {
+    //use of setInterval
+    if (!startTime) { 
       startTime = new Date();
+      // Start the timer interval
+      setInterval(updateTime, 1000);
     }
 
     checkWinner();
@@ -47,37 +50,28 @@ function checkWinner() {
   }
 
   if (!gameBoard.includes("")) {
-    endGame("It's a draw!");
+    endGame("It's a tie!");
   }
 }
 
-function endGame(result) {
-  endTime = new Date();
-  const duration = (endTime - startTime) / 1000;
-  document.getElementById("result-text").innerText = result;
-  document.getElementById("time-text").innerText = `Time: ${duration} seconds`;
+function endGame(message) {
   gameActive = false;
-  showResult();
+  endTime = new Date();
+  clearInterval(updateTime); // Stop the timer interval
+  alert(message);
 }
 
-function showResult() {
-  const resultContainer = document.querySelector(".result");
-  resultContainer.style.display = "flex";
-  document.getElementById("restart-button").style.display = "block";
-}
+function updateTime() {
+  const currentTime = new Date();
+  const elapsedTime = currentTime - startTime;
 
-function resetGame() {
-  gameBoard = ["", "", "", "", "", "", "", "", ""];
-  currentPlayer = "X";
-  gameActive = true;
-  startTime = null;
-  endTime = null;
+  // Display the elapsed time
+  const minutes = Math.floor(elapsedTime / 60000);
+  const seconds = Math.floor((elapsedTime % 60000) / 1000);
+  document.getElementById("time-text").innerText = `Time: ${minutes}:${seconds}`;
 
-  const cells = document.getElementsByClassName("cell");
-  for (const cell of cells) {
-    cell.innerText = "";
+  // Check if the game has reached the time limit
+  if (elapsedTime >= gameTimeLimit) {
+    endGame("Time's up! The game is over.");
   }
-
-  document.querySelector(".result").style.display = "none";
-  document.getElementById("restart-button").style.display = "none";
 }
