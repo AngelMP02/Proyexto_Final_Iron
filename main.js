@@ -75,3 +75,4 @@ function updateTime() {
     endGame("Time's up! The game is over.");
   }
 }
+
