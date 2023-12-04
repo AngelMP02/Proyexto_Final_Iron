@@ -65,7 +65,7 @@ function updateTime() {
   const currentTime = new Date();
   const elapsedTime = currentTime - startTime;
 
-  // Display the elapsed time
+
   const minutes = Math.floor(elapsedTime / 60000);
   const seconds = Math.floor((elapsedTime % 60000) / 1000);
   document.getElementById("time-text").innerText = `Time: ${minutes}:${seconds}`;
